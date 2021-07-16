@@ -18,7 +18,7 @@ import org.jfree.chart.renderer.category.LineAndShapeRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.general.DatasetUtilities;
 
-public class BarChart {
+public class SaveChartAsPNG {
 
 	/**
 	 * 生成折线图
@@ -103,7 +103,7 @@ public class BarChart {
 		CategoryDataset dataset = DatasetUtilities.createCategoryDataset(rowKeys, columnKeys, data);
 		try {
 			FileOutputStream fos = new FileOutputStream("H:/test/abc.png");
-			ChartUtilities.writeChartAsPNG(fos, new BarChart().makeLineAndShapeChart("各地汽车销量", "城市", "销量", dataset), 800, 600);
+			ChartUtilities.writeChartAsPNG(fos, new SaveChartAsPNG().makeLineAndShapeChart("各地汽车销量", "城市", "销量", dataset), 800, 600);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

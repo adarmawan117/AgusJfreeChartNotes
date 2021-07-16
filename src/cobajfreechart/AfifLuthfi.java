@@ -1,7 +1,9 @@
 package cobajfreechart;
 
+
 import java.awt.Color;
 import java.awt.GradientPaint;
+import javax.swing.JFrame;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -16,73 +18,64 @@ import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
 
-/**
- * A simple demonstration application showing how to create a pie chart using
- * data from a {@link DefaultPieDataset}. This demo also shows an "exploded"
- * section in the chart.
- *
- */
-public class Bar2D extends ApplicationFrame {
+public class AfifLuthfi extends ApplicationFrame {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = -1314877738034042129L;
 
-    /**
-     * Default constructor.
-     *
-     * @param title the frame title.
-     */
-    public Bar2D(final String title) {
-
+    private Dataset dataset;
+    private AfifLuthfiController afifLuthfiController;
+    private String title;
+    
+    
+    public AfifLuthfi(final String title, String query) {
+        
         super(title);
+        this.title = title;
+        
+        afifLuthfiController = new AfifLuthfiController();
+        dataset = afifLuthfiController.getDataset(query);
+        
         final JFreeChart chart = createChart(createDataset());
 
-        // add the chart to a panel...
         final ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
+        chartPanel.setPreferredSize(new java.awt.Dimension(1000, 500)); // merubah dimensi chart (width, height)
         setContentPane(chartPanel);
-
+        
+        addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                dispose();
+            }
+        });
+        
+        setUndecorated(true); // untuk mematikan exit, maximize, minimize
+        setExtendedState(JFrame.MAXIMIZED_BOTH);  // untuk full screen
+        
+        this.pack();
+        RefineryUtilities.centerFrameOnScreen(this);
+        
+        this.setVisible(true);
     }
 
-    /**
-     * Creates a sample dataset.
-     *
-     * @return a sample dataset.
-     */
     private CategoryDataset createDataset() {
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-                        // jumlah, retur/terjual, nama barang
-                        // x sebagai retur
-                        // y sebagai terjual
-        dataset.setValue(10, "X", "A");
-        dataset.setValue(8, "X", "B");
-        dataset.setValue(6, "X", "C");
-        dataset.setValue(12, "X", "D");
-        dataset.setValue(9, "X", "E");
-        dataset.setValue(11, "X", "F");
-        dataset.setValue(3, "X", "G");
-
         
-        dataset.setValue(5, "Y", "A");
-        dataset.setValue(2, "Y", "B");
-        dataset.setValue(9, "Y", "C");
-        dataset.setValue(1, "Y", "D");
-        dataset.setValue(15, "Y", "E");
-        dataset.setValue(4, "Y", "F");
-        dataset.setValue(8, "Y", "G");
+        DefaultCategoryDataset deafultCategoryDataset = new DefaultCategoryDataset();
+                                        // jumlah, retur/terjual, nama barang
+                                        // x sebagai retur
+                                        // y sebagai terjual
+        int jumlahData = dataset.getJumlahData();
+        for(int i = 0; i < jumlahData; i++) {
+            deafultCategoryDataset.setValue(dataset.getRetur(i), "Retur", dataset.getNamaBarang(i));
+            deafultCategoryDataset.setValue(dataset.getTerjual(i), "Terjual", dataset.getNamaBarang(i));
+        }
         
-        return dataset;
-
-        //dataset.s
-        //return dataset;
+        return deafultCategoryDataset;
     }
 
     private JFreeChart createChart(CategoryDataset dataset) {
         //JFreeChart chart = ChartFactory.createXYLineChart("title", "xAxisLabel", "yAxisLabel", dataset, PlotOrientation.VERTICAL, true, true, true);
 
-        JFreeChart chart = ChartFactory.createBarChart("title", "categoryAxisLabel", "valueAxisLabel", dataset, PlotOrientation.VERTICAL, true, true, true);
+        JFreeChart chart = ChartFactory.createBarChart(title, "Nama Barang", "Jumlah", dataset, PlotOrientation.VERTICAL, true, true, true);
 
         CategoryPlot plot = chart.getCategoryPlot();
 
@@ -118,21 +111,5 @@ public class Bar2D extends ApplicationFrame {
         renderer.setSeriesPaint(0, p);*/
         //chart.getXYPlot().setDomainGridlinePaint(Color.RED);
         return chart;
-
     }
-
-    /**
-     * Starting point for the demonstration application.
-     *
-     * @param args ignored.
-     */
-    public static void main(final String[] args) {
-
-        final Bar2D demo = new Bar2D("Pie Chart Demo 2");
-        demo.pack();
-        RefineryUtilities.centerFrameOnScreen(demo);
-        demo.setVisible(true);
-
-    }
-
 }
